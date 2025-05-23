@@ -1,0 +1,42 @@
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
+
+// Import routes
+const authRoutes = require("./routes/auth");
+const curriculumRoutes = require("./routes/curriculum");
+const userRoutes = require("./routes/user");
+const tagRoutes = require("./routes/tags");
+const healthRoutes = require("./routes/health");
+
+const app = express();
+
+// Middleware
+app.use(helmet()); // Set security headers
+app.use(cors()); // Enable CORS
+app.use(morgan("dev")); // Logging
+app.use(express.json()); // Parse JSON bodies
+
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/curriculums", curriculumRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/tags", tagRoutes);
+app.use("/api", healthRoutes); // Health check endpoint
+
+// Error handling middleware
+app.use((err, req, res, _next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    message: "Internal Server Error",
+    error: process.env.NODE_ENV === "development" ? err.message : undefined,
+  });
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
