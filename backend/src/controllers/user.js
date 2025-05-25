@@ -35,6 +35,48 @@ exports.getUsers = async (req, res) => {
   }
 };
 
+exports.getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const db = require("../database");
+
+    // Get user from database with role information
+    db.get(
+      `SELECT u.id, u.email, u.name, u.role_id, r.name as role_name 
+       FROM users u
+       JOIN roles r ON u.role_id = r.id
+       WHERE u.id = ?`,
+      [id],
+      (err, row) => {
+        if (err) {
+          console.error("Database query error:", err);
+          return res.status(500).json({ message: "Failed to retrieve user" });
+        }
+
+        if (!row) {
+          return res.status(404).json({ message: "User not found" });
+        }
+
+        // Format user for the response
+        const user = {
+          id: row.id,
+          name: row.name,
+          email: row.email,
+          role: {
+            id: row.role_id,
+            name: row.role_name,
+          },
+        };
+
+        res.json({ user });
+      }
+    );
+  } catch (error) {
+    console.error("Get user by ID error:", error);
+    res.status(500).json({ message: "Failed to retrieve user" });
+  }
+};
+
 exports.updateUserRole = async (req, res) => {
   try {
     const { id } = req.params;

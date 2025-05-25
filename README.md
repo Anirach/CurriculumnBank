@@ -64,16 +64,31 @@ CurriculumBank provides a user-friendly interface for managing curriculum docume
 For production deployment, use Docker:
 
 ```bash
+# Fix Docker build issues (if needed)
+./fix-docker.sh
+
 # Set up environment variables
 cp .env.example .env
 # Edit .env with your production configuration
+
+# Test Docker build
+./test-docker.sh
 
 # Run the deployment script
 chmod +x deploy.sh
 ./deploy.sh
 ```
 
-For detailed deployment instructions, see the [Deployment Guide](docs/deployment-guide.md).
+**Quick Start Options:**
+
+- **Development mode**: `./simple-start.sh`
+- **Docker mode**: `./fix-docker.sh && docker-compose up`
+- **Production**: See [Deployment Guide](docs/deployment-guide.md)
+
+For detailed deployment instructions and troubleshooting, see:
+
+- [Docker Setup Guide](DOCKER-SETUP.md)
+- [Deployment Guide](docs/deployment-guide.md)
 
 ## Testing
 

@@ -1,12 +1,10 @@
-version: "3.8"
-
 services:
   backend:
     build: ./backend
     container_name: curriculum-bank-backend
     restart: always
     ports:
-      - "127.0.0.1:3001:3001" # Only expose to localhost for security
+      - "127.0.0.1:5000:5000" # Only expose to localhost for security
     environment:
       - NODE_ENV=production
       - JWT_SECRET=${JWT_SECRET}
@@ -24,7 +22,7 @@ services:
           "--no-verbose",
           "--tries=1",
           "--spider",
-          "http://localhost:3001/api/health",
+          "http://localhost:5000/api/health",
         ]
       interval: 30s
       timeout: 10s
